@@ -9,11 +9,7 @@ import java.time.LocalDate;
 @Getter
 public class UserResDto {
 
-    private Long id;
-
     private String email;
-
-    private String password;
 
     private String name;
 
@@ -28,9 +24,7 @@ public class UserResDto {
     private Role role;
 
     public UserResDto(User user) {
-        this.id = user.getId();
         this.email = user.getEmail();
-        this.password = user.getPassword();
         this.name = user.getName();
         this.birthDate = user.getBirthDate();
         this.nickname = user.getNickname();

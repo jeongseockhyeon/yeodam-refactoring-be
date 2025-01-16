@@ -1,6 +1,6 @@
-package com.auth.repository;
+package com.example.yeodamrefactoring.auth.repository;
 
-import com.auth.entity.Auth;
+import com.example.yeodamrefactoring.auth.entity.Auth;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.Optional;

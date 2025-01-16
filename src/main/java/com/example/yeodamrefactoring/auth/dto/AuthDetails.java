@@ -1,6 +1,6 @@
-package com.auth.dto;
+package com.example.yeodamrefactoring.auth.dto;
 
-import com.auth.entity.Auth;
+import com.example.yeodamrefactoring.auth.entity.Auth;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;

@@ -1,4 +1,4 @@
-package com.auth.entity.type;
+package com.example.yeodamrefactoring.auth.entity.type;
 
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;

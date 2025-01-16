@@ -1,8 +1,8 @@
-package com.auth.service;
+package com.example.yeodamrefactoring.auth.service;
 
-import com.auth.dto.AuthDetails;
-import com.auth.entity.Auth;
-import com.auth.repository.AuthRepository;
+import com.example.yeodamrefactoring.auth.dto.AuthDetails;
+import com.example.yeodamrefactoring.auth.entity.Auth;
+import com.example.yeodamrefactoring.auth.repository.AuthRepository;
 import com.example.yeodamrefactoring.global.exception.CustomErrorCode;
 import com.example.yeodamrefactoring.global.exception.CustomException;
 import lombok.RequiredArgsConstructor;

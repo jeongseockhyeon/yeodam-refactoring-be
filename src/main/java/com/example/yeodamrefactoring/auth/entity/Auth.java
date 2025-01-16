@@ -1,17 +1,15 @@
-package com.auth.entity;
+package com.example.yeodamrefactoring.auth.entity;
 
-import com.auth.entity.type.Role;
+import com.example.yeodamrefactoring.auth.entity.type.Role;
 import jakarta.persistence.*;
-import lombok.AccessLevel;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor
 @Getter
 @Inheritance(strategy = InheritanceType.JOINED)
 @DiscriminatorColumn(name="auth_type")
+@Entity
 public abstract class Auth {
 
     @Id
@@ -25,6 +23,12 @@ public abstract class Auth {
 
     @Enumerated(EnumType.STRING)
     private Role role;
+
+    public Auth(String email, String password, Role role) {
+        this.email = email;
+        this.password = password;
+        this.role = role;
+    }
 
 
 }

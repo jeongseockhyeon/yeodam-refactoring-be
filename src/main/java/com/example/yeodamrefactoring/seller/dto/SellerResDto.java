@@ -7,17 +7,17 @@ import lombok.Getter;
 @Getter
 public class SellerResDto {
 
-    private String email;
+    private final String email;
 
-    private String phone;
+    private final String phone;
 
-    private String companyName;
+    private final String companyName;
 
-    private String owner;
+    private final String owner;
 
-    private String bio;
+    private final String bio;
 
-    private Role role;
+    private final Role role;
 
     public SellerResDto(Seller seller) {
 

@@ -9,19 +9,19 @@ import java.time.LocalDate;
 @Getter
 public class UserResDto {
 
-    private String email;
+    private final String email;
 
-    private String name;
+    private final String name;
 
-    private LocalDate birthDate;
+    private final LocalDate birthDate;
 
-    private String nickname;
+    private final String nickname;
 
-    private String gender;
+    private final String gender;
 
-    private String phone;
+    private final String phone;
 
-    private Role role;
+    private final Role role;
 
     public UserResDto(User user) {
         this.email = user.getEmail();

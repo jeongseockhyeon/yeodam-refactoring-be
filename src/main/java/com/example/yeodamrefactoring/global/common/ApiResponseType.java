@@ -10,7 +10,7 @@ public enum ApiResponseType {
     SUCCESS(200, "success"),
 
     UNAUTHORIZED(401, "unauthorized"),
-    FORBIDDEN(400, "forbidden"),
+    FORBIDDEN(403, "forbidden"),
     NOT_FOUND(404, "not_found"),
     METHOD_NOT_ALLOWED(405, "method_not_allowed"),
 

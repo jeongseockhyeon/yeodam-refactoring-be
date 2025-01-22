@@ -2,6 +2,7 @@ package com.example.yeodamrefactoring.seller.entity;
 
 import com.example.yeodamrefactoring.auth.entity.Auth;
 import com.example.yeodamrefactoring.auth.entity.type.Role;
+import jakarta.persistence.DiscriminatorValue;
 import jakarta.persistence.Entity;
 import lombok.*;
 
@@ -9,6 +10,7 @@ import lombok.*;
 @Entity
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
+@DiscriminatorValue("seller")
 @AllArgsConstructor
 public class Seller extends Auth {
 

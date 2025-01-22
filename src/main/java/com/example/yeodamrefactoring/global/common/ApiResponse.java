@@ -51,7 +51,8 @@ public class ApiResponse {
         httpServletResponse.setContentType(MediaType.APPLICATION_JSON_VALUE);
         httpServletResponse.setCharacterEncoding("UTF-8");
         httpServletResponse.setStatus(ApiResponseType.SUCCESS.getCode());
-        httpServletResponse.getWriter().write(Objects.requireNonNull(objectMapper.writeValueAsString(new DataApiResponse<String>(token))));
+
+        httpServletResponse.setHeader("Authorization", "Bearer " + token);
     }
 
     @Getter

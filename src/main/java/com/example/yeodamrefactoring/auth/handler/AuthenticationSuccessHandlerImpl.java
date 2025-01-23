@@ -1,17 +1,15 @@
 package com.example.yeodamrefactoring.auth.handler;
 
+import com.example.yeodamrefactoring.auth.dto.ResTokenDto;
 import com.example.yeodamrefactoring.auth.jwt.JwtProvider;
-import com.example.yeodamrefactoring.global.common.ApiResponse;
-import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.MediaType;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
 import org.springframework.stereotype.Component;
-
-import java.io.IOException;
 
 @Component
 @RequiredArgsConstructor
@@ -20,12 +18,22 @@ public class AuthenticationSuccessHandlerImpl implements AuthenticationSuccessHa
     private final JwtProvider jwtProvider;
 
     @Override
-    public void onAuthenticationSuccess(HttpServletRequest request, HttpServletResponse response, Authentication authentication) throws IOException, ServletException {
+    public void onAuthenticationSuccess(HttpServletRequest request, HttpServletResponse response, Authentication authentication) {
 
         SecurityContextHolder.getContext().setAuthentication(authentication);
 
-        final String token = jwtProvider.generateToken(authentication);
+        final ResTokenDto tokens = jwtProvider.generateToken(authentication);
 
-        ApiResponse.token(response, token);
+        response.setHeader("Authorization", "Bearer " + tokens.getAccessToken());
+        response.setHeader("Set-Cookie",createCookie(tokens.getRefreshToken()));
+
+        response.setStatus(HttpServletResponse.SC_OK);
+        response.setCharacterEncoding("UTF-8");
+        response.setContentType(MediaType.APPLICATION_JSON_VALUE);
+
+    }
+
+    private String createCookie(String value) {
+        return "refresh-token" + "=" + value + "; Max-Age=7776000; Secure; Path=/; HttpOnly; SameSite=None";
     }
 }

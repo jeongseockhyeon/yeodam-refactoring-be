@@ -1,5 +1,6 @@
 package com.example.yeodamrefactoring.auth.jwt;
 
+import com.example.yeodamrefactoring.auth.dto.ResTokenDto;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.JwtException;
 import io.jsonwebtoken.Jwts;
@@ -47,15 +48,29 @@ public class JwtProvider {
         return new UsernamePasswordAuthenticationToken(userDetails, null, userDetails.getAuthorities());
     }
 
-    public String generateToken(Authentication authentication) {
+    public ResTokenDto generateToken(Authentication authentication) {
         Claims claims = Jwts.claims().setSubject(authentication.getPrincipal().toString());
         claims.put("role", authentication.getAuthorities().toString());
         Date now = new Date();
-        return Jwts.builder()
+        String accessToken = Jwts.builder()
+                .setHeaderParam("typ", "JWT")
+                .setHeaderParam("alg", "HS256")
+                .setSubject("access-token")
                 .setClaims(claims)
                 .setIssuedAt(now)
                 .setExpiration(new Date(now.getTime() + accessTokenValidTime))
                 .compact();
+
+        String refreshToken = Jwts.builder()
+                .setHeaderParam("typ","jwt")
+                .setHeaderParam("alg","HS256")
+                .setSubject("refresh-token")
+                .setClaims(claims)
+                .setIssuedAt(now)
+                .setExpiration(new Date(now.getTime()+refreshTokenValidTime))
+                .compact();
+
+        return new ResTokenDto(accessToken, refreshToken);
     }
 
     public boolean isValidateToken(String token) {

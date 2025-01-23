@@ -46,14 +46,6 @@ public class ApiResponse {
         httpServletResponse.getWriter().write(Objects.requireNonNull(objectMapper.writeValueAsString(ApiResponse.error(apiResponseType))));
     }
 
-    public static void token(ServletResponse response, String token) throws IOException {
-        HttpServletResponse httpServletResponse = (HttpServletResponse) response;
-        httpServletResponse.setContentType(MediaType.APPLICATION_JSON_VALUE);
-        httpServletResponse.setCharacterEncoding("UTF-8");
-        httpServletResponse.setStatus(ApiResponseType.SUCCESS.getCode());
-
-        httpServletResponse.setHeader("Authorization", "Bearer " + token);
-    }
 
     @Getter
     @AllArgsConstructor

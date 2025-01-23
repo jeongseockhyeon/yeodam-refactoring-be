@@ -1,4 +1,4 @@
-package com.example.yeodamrefactoring.global;
+package com.example.yeodamrefactoring.global.auditing;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.EntityListeners;

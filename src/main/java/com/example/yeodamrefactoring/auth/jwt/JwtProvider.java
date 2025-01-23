@@ -4,6 +4,8 @@ import com.example.yeodamrefactoring.auth.dto.ResTokenDto;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.JwtException;
 import io.jsonwebtoken.Jwts;
+import io.jsonwebtoken.SignatureAlgorithm;
+import io.jsonwebtoken.security.Keys;
 import jakarta.annotation.PostConstruct;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
@@ -13,6 +15,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.stereotype.Component;
 
+import java.security.Key;
 import java.util.Base64;
 import java.util.Date;
 
@@ -30,8 +33,11 @@ public class JwtProvider {
     @Value("${spring.jwt.refresh-token-valid-time}")
     private long refreshTokenValidTime;
 
+    private static Key signingKey;
+
     @PostConstruct
     public void init() {
+        signingKey = Keys.hmacShaKeyFor(secretKey.getBytes());
         secretKey = Base64.getEncoder().encodeToString(secretKey.getBytes());
     }
 
@@ -59,6 +65,7 @@ public class JwtProvider {
                 .setClaims(claims)
                 .setIssuedAt(now)
                 .setExpiration(new Date(now.getTime() + accessTokenValidTime))
+                .signWith(signingKey,SignatureAlgorithm.HS256)
                 .compact();
 
         String refreshToken = Jwts.builder()
@@ -68,6 +75,7 @@ public class JwtProvider {
                 .setClaims(claims)
                 .setIssuedAt(now)
                 .setExpiration(new Date(now.getTime()+refreshTokenValidTime))
+                .signWith(signingKey,SignatureAlgorithm.HS256)
                 .compact();
 
         return new ResTokenDto(accessToken, refreshToken);
@@ -80,6 +88,10 @@ public class JwtProvider {
         } catch (JwtException | NullPointerException e) {
             return false;
         }
+    }
+
+    public long getTokenValidTime(String token) {
+        return getClaimsFromToken(token).getExpiration().getTime();
     }
 
 

@@ -1,8 +1,11 @@
 package com.example.yeodamrefactoring.global.config;
 
 import com.example.yeodamrefactoring.auth.filter.CustomAuthenticationFilter;
+import com.example.yeodamrefactoring.auth.filter.CustomLogoutFilter;
 import com.example.yeodamrefactoring.auth.jwt.JwtFilter;
 import com.example.yeodamrefactoring.auth.jwt.JwtProvider;
+import com.example.yeodamrefactoring.auth.service.AuthService;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -19,6 +22,7 @@ import org.springframework.security.web.access.AccessDeniedHandler;
 import org.springframework.security.web.authentication.AuthenticationFailureHandler;
 import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+import org.springframework.security.web.authentication.logout.LogoutFilter;
 
 @RequiredArgsConstructor
 @Configuration
@@ -29,6 +33,8 @@ public class SecurityConfig {
     private final AuthenticationFailureHandler authenticationFailureHandler;
     private final AccessDeniedHandler accessDeniedHandler;
     private final AuthenticationConfiguration authenticationConfiguration;
+    private final AuthService authService;
+    private final ObjectMapper objectMapper;
 
     @Bean
     public PasswordEncoder passwordEncoder() { return new BCryptPasswordEncoder(); }
@@ -48,13 +54,17 @@ public class SecurityConfig {
                 )
                 .formLogin(AbstractHttpConfigurer::disable)
                 .csrf(AbstractHttpConfigurer::disable)
+
+                .addFilterBefore(authenticationFilter(), UsernamePasswordAuthenticationFilter.class)
+                .addFilterBefore(jwtFilter(), UsernamePasswordAuthenticationFilter.class)
+                .addFilterBefore(new CustomLogoutFilter(authService,objectMapper), LogoutFilter.class)
+
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .exceptionHandling(e ->
                         e
                                 .accessDeniedHandler(accessDeniedHandler)
                                 .authenticationEntryPoint(authenticationEntryPoint))
-                .addFilterBefore(authenticationFilter(), UsernamePasswordAuthenticationFilter.class)
-                .addFilterBefore(jwtFilter(), UsernamePasswordAuthenticationFilter.class)
+
         ;
         return http.build();
     }
@@ -72,6 +82,7 @@ public class SecurityConfig {
         customAuthenticationFilter.afterPropertiesSet();
         return customAuthenticationFilter;
     }
+
 
     @Bean
     public AuthenticationManager authenticationManager(AuthenticationConfiguration configuration) throws Exception {

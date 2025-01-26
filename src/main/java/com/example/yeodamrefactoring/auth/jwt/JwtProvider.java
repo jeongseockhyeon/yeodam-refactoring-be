@@ -1,6 +1,7 @@
 package com.example.yeodamrefactoring.auth.jwt;
 
 import com.example.yeodamrefactoring.auth.dto.ResTokenDto;
+import com.example.yeodamrefactoring.global.Dao.RedisDao;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.JwtException;
 import io.jsonwebtoken.Jwts;
@@ -23,6 +24,7 @@ import java.util.Date;
 @RequiredArgsConstructor
 public class JwtProvider {
     private final UserDetailsService userDetailsService;
+    private final RedisDao redisDao;
 
     @Value("${spring.jwt.secret-key}")
     private String secretKey;
@@ -83,6 +85,10 @@ public class JwtProvider {
 
     public boolean isValidateToken(String token) {
         try {
+            if (isBlacklisted(token)){
+                return false;
+            }
+
             Claims claims = getClaimsFromToken(token);
             return !claims.getExpiration().before(new Date());
         } catch (JwtException | NullPointerException e) {
@@ -92,6 +98,10 @@ public class JwtProvider {
 
     public long getTokenValidTime(String token) {
         return getClaimsFromToken(token).getExpiration().getTime();
+    }
+
+    private boolean isBlacklisted(String token) {
+        return redisDao.hasKey(token);
     }
 
 
